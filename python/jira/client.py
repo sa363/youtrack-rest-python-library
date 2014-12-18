@@ -14,7 +14,6 @@ class JiraClient(object):
         self._headers = {}
         self._http = httplib2.Http(timeout=10, disable_ssl_certificate_validation=True)
         self._login(login, password)
-        print(self._headers)
         # self._http.add_credentials(login, password)
 
 
