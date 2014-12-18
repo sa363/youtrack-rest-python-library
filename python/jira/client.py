@@ -13,8 +13,10 @@ class JiraClient(object):
         self._url = (url[:-1] if (url[-1] == '/') else url) + "/rest"
         self._headers = {}
         self._http = httplib2.Http(timeout=10, disable_ssl_certificate_validation=True)
-        # self._http.add_credentials(login, password)
         self._login(login, password)
+        print(self._headers)
+        # self._http.add_credentials(login, password)
+
 
     def get_issue_link_types(self):
         response, content = self._get(self._rest_url() + '/issueLinkType')
@@ -67,7 +69,9 @@ class JiraClient(object):
         return response, json.loads(content)
 
     def _login(self, login, password):
-        # response, content = self._post(self._url + "/auth/1/session", {"username": login, "password": password})
-        # self._headers['JSESSIONID'] = content['session']['value']
-        auth = base64.encodestring(login + ':' + password)
-        self._headers['Authorization'] = 'Basic ' + auth
+        response, content = self._post(self._url + "/auth/1/session", {"username": login, "password": password})
+        self._headers['JSESSIONID'] = content['session']['value']
+        self._headers['Cookie'] = response['set-cookie']
+
+        # auth = base64.encodestring(login + ':' + password)
+        # self._headers['Authorization'] = 'Basic ' + auth

@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+# encoding=utf8
+
 import calendar
 import functools
 import os
@@ -13,6 +15,12 @@ from youtrack import Issue, YouTrackException, Comment, Link, WorkItem
 import youtrack
 from youtrack.connection import Connection
 from youtrack.importHelper import create_bundle_safe
+
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 jt_fields = []
 
@@ -263,6 +271,7 @@ def create_value(target, value, field_name, field_type, project_id):
     if field_type.startswith('user'):
         create_user(target, value)
         value['name'] = value['name'].replace(' ', '_')
+        value['name'] = value['name'].replace('/', '|')
     if field_name in jira.EXISTING_FIELDS:
         return
     if field_name.lower() not in [field.name.lower() for field in target.getProjectCustomFields(project_id)]:
@@ -328,6 +337,7 @@ def get_value_presentation(field_type, value):
     if field_type == 'string':
         return value
     if 'name' in value:
+        value['name'] = value['name'].replace('/', '|')
         return value['name']
     if 'value' in value:
         return value['value']
