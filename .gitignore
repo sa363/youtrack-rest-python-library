@@ -1,3 +1,5 @@
 *.pyc
 .idea
 */.idea
+python/autoupdate.py
+python/autoimport.py
